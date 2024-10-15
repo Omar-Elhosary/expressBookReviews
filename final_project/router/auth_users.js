@@ -47,9 +47,27 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   if (books[isbn]) {
     const book = books[isbn];
     book.reviews[username] = review;
+
     return res
       .status(201)
       .send({ message: "Your review has been added successfully!", review });
+  }
+
+  return res
+    .status(400)
+    .json({ message: "ISBN is invalid or The book isn't found" });
+});
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  const isbn = req.params.isbn;
+  const username = req.session.username;
+  if (books[isbn]) {
+    const book = books[isbn];
+    delete book.reviews[username];
+    
+    return res
+      .status(201)
+      .send({ message: "Your review has been deleted " });
   }
 
   return res
