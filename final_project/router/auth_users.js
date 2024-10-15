@@ -43,13 +43,18 @@ regd_users.post("/login", (req, res) => {
 regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   const username = req.session.username;
-  const token = req.session.token;
-  const review = req.query;
+  const review = req.query.review;
   if (books[isbn]) {
     const book = books[isbn];
     book.reviews[username] = review;
+    return res
+      .status(201)
+      .send({ message: "Your review has been added successfully!", review });
   }
-  return res.status(300).json({ message: "Yet to be implemented" });
+
+  return res
+    .status(400)
+    .json({ message: "ISBN is invalid or The book isn't found" });
 });
 
 module.exports.authenticated = regd_users;
